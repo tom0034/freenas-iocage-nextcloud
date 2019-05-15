@@ -180,7 +180,7 @@ iocage exec ${JAIL_NAME} chown -R www:www /mnt/files
 iocage exec ${JAIL_NAME} chmod -R 770 /mnt/files
 iocage exec ${JAIL_NAME} "if [ -z /usr/ports ]; then portsnap fetch extract; else portsnap auto; fi"
 iocage exec ${JAIL_NAME} chsh -s /usr/local/bin/bash root
-FILE="nextcloud-16.0.0.tar.bz2"
+FILE="latest-16.tar.bz2"
 iocage exec ${JAIL_NAME} fetch -o /tmp https://download.nextcloud.com/server/releases/$FILE https://download.nextcloud.com/server/releases/$FILE.asc https://nextcloud.com/nextcloud.asc
 if [ $? -ne 0 ]
 then
