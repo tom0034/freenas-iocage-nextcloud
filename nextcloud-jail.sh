@@ -14,6 +14,7 @@ DEFAULT_GW_IP=""
 INTERFACE="vnet0"
 VNET="on"
 POOL_PATH=""
+BASE_PATH="nextcloud"
 JAIL_NAME="nextcloud"
 TIME_ZONE=""
 HOST_NAME=""
@@ -101,13 +102,13 @@ fi
 
 # If DB_PATH, FILES_PATH, and PORTS_PATH weren't set in nextcloud-config, set them
 if [ -z "${DB_PATH}" ]; then
-  DB_PATH="${POOL_PATH}"/db
+  DB_PATH="${POOL_PATH}"/"${BASE_PATH}"/db
 fi
 if [ -z "${FILES_PATH}" ]; then
-  FILES_PATH="${POOL_PATH}"/files
+  FILES_PATH="${POOL_PATH}"/"${BASE_PATH}"/files
 fi
 if [ -z "${PORTS_PATH}" ]; then
-  PORTS_PATH="${POOL_PATH}"/portsnap
+  PORTS_PATH="${POOL_PATH}"/"${BASE_PATH}"/portsnap
 fi
 
 # Sanity check DB_PATH, FILES_PATH, and PORTS_PATH -- they all have to be different,
@@ -326,9 +327,10 @@ iocage exec "${JAIL_NAME}" su -m www -c 'php /usr/local/www/nextcloud/occ config
 iocage exec "${JAIL_NAME}" su -m www -c 'php /usr/local/www/nextcloud/occ maintenance:update:htaccess'
 iocage exec "${JAIL_NAME}" su -m www -c "php /usr/local/www/nextcloud/occ config:system:set trusted_domains 1 --value=\"${HOST_NAME}\""
 iocage exec "${JAIL_NAME}" su -m www -c "php /usr/local/www/nextcloud/occ config:system:set trusted_domains 2 --value=\"${JAIL_IP}\""
-iocage exec "${JAIL_NAME}" su -m www -c 'php /usr/local/www/nextcloud/occ app:enable encryption'
-iocage exec "${JAIL_NAME}" su -m www -c 'php /usr/local/www/nextcloud/occ encryption:enable'
-iocage exec "${JAIL_NAME}" su -m www -c 'php /usr/local/www/nextcloud/occ encryption:disable'
+# disable encryption
+#iocage exec "${JAIL_NAME}" su -m www -c 'php /usr/local/www/nextcloud/occ app:enable encryption'
+#iocage exec "${JAIL_NAME}" su -m www -c 'php /usr/local/www/nextcloud/occ encryption:enable'
+#iocage exec "${JAIL_NAME}" su -m www -c 'php /usr/local/www/nextcloud/occ encryption:disable'
 iocage exec "${JAIL_NAME}" su -m www -c 'php /usr/local/www/nextcloud/occ background:cron'
 iocage exec "${JAIL_NAME}" su -m www -c 'php -f /usr/local/www/nextcloud/cron.php'
 iocage exec "${JAIL_NAME}" crontab -u www /mnt/configs/www-crontab
